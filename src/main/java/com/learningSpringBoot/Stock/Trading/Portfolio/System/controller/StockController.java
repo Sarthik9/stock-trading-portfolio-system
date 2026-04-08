@@ -1,14 +1,15 @@
-package com.learningSpringBoot.Stock.Trading.Portfolio.System.Controller;
+package com.learningSpringBoot.Stock.Trading.Portfolio.System.controller;
 
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO.Order;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO.OrderResponse;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO.StockRequest;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO.StockResponse;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.Service.StockService;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Order;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.OrderResponse;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.StockRequest;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.StockResponse;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,6 +27,13 @@ public class StockController {
 
         StockResponse response = stockService.getOrderDetails(requestObj);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/fetchOrders")
+    public ResponseEntity<List<StockResponse>> fetchAllOrders(){
+
+        List<StockResponse> responseList = stockService.fetchOrders();
+        return ResponseEntity.ok(responseList);
     }
 
     @PostMapping("/createOrder")

@@ -1,24 +1,33 @@
-package com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO;
+package com.learningSpringBoot.Stock.Trading.Portfolio.System.entity;
 
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.Models.OrderType;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
-public class Order {
+@Entity
+public class StockEntity {
 
+    @Id
+    @UuidGenerator
     private UUID uId;
     private String stock;
     private long price;
     private int quantity;
+
+    @Enumerated(EnumType.STRING)
     private OrderType orderType;
 
-    public long getPrice() {
-        return price;
+    public String getStock() {
+        return stock;
     }
 
-    public void setPrice(long price) {
-        this.price = price;
+    public void setStock(String stock) {
+        this.stock = stock;
     }
 
     public UUID getuId() {
@@ -29,12 +38,12 @@ public class Order {
         this.uId = uId;
     }
 
-    public String getStock() {
-        return stock;
+    public long getPrice() {
+        return price;
     }
 
-    public void setStock(String stock) {
-        this.stock = stock;
+    public void setPrice(long price) {
+        this.price = price;
     }
 
     public int getQuantity() {

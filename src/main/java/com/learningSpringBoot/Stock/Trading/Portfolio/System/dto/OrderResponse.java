@@ -1,6 +1,6 @@
-package com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO;
+package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.Models.OrderType;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO;
+package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
 import java.util.UUID;
 

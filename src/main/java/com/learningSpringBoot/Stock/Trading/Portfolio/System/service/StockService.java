@@ -1,13 +1,15 @@
-package com.learningSpringBoot.Stock.Trading.Portfolio.System.Service;
+package com.learningSpringBoot.Stock.Trading.Portfolio.System.service;
 
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO.Order;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO.OrderResponse;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO.StockRequest;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.DTO.StockResponse;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.Entity.StockEntity;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.Repository.StockRepository;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Order;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.OrderResponse;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.StockRequest;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.StockResponse;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.StockEntity;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class StockService {
@@ -56,5 +58,12 @@ public class StockService {
         result.setStatus("SUCCESS");
         result.setOrderType(response.getOrderType());
         return result;
+    }
+
+    public List<StockResponse> fetchOrders() {
+        List<StockEntity> ordersList = stockRepository.findAll();
+        return ordersList.stream()
+                .map(this::mapResponseDataToDTO)
+                .toList();
     }
 }

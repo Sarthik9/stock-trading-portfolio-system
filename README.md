@@ -21,7 +21,7 @@ This project is designed to demonstrate **backend engineering skills**, includin
 ## 🛠 Tech Stack
 
 | Layer           | Technology                  |
-| --------------- | --------------------------- |
+|-----------------|-----------------------------|
 | Language        | Java 17                     |
 | Framework       | Spring Boot                 |
 | ORM             | Spring Data JPA (Hibernate) |
