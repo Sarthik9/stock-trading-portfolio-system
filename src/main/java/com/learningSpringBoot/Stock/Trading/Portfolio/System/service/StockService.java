@@ -15,7 +15,7 @@ import java.util.List;
 public class StockService {
 
     @Autowired
-    StockRepository stockRepository;
+    private StockRepository stockRepository;
 
     public StockResponse getOrderDetails(StockRequest requestObj){
         StockEntity responseData = stockRepository.getById(requestObj.getUserId());
