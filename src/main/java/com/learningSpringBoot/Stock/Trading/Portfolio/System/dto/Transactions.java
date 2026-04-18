@@ -1,6 +1,5 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
 
 import java.time.LocalDateTime;
@@ -9,6 +8,7 @@ import java.util.UUID;
 public class Transactions {
 
     private UUID userId;
+    private UUID txnId;
     private String stock;
     private int quantity;
     private double price;
@@ -22,6 +22,14 @@ public class Transactions {
 
     public void setUserId(UUID userId) {
         this.userId = userId;
+    }
+
+    public UUID getTxnId() {
+        return txnId;
+    }
+
+    public void setTxnId(UUID txnId) {
+        this.txnId = txnId;
     }
 
     public String getStock() {

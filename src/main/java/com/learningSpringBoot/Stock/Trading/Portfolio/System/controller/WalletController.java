@@ -1,7 +1,6 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.controller;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Money;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.StockRequest;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.WalletResponse;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/Wallet")
+@RequestMapping("/wallet")
 public class WalletController {
 
     @Autowired

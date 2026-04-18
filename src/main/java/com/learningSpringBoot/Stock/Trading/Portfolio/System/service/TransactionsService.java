@@ -26,6 +26,8 @@ public class TransactionsService {
 
     private Transactions mapToTransactions(TransactionsEntity entity) {
         Transactions transactions = new Transactions();
+        transactions.setUserId(entity.getUserId());
+        transactions.setTxnId(entity.getTxnId());
         transactions.setStock(entity.getStockSymbol());
         transactions.setQuantity(entity.getQuantity());
         transactions.setPrice(entity.getPrice());
@@ -36,17 +38,22 @@ public class TransactionsService {
 
     public void createTransaction(
              UUID userId,
+             UUID txnId,
              String stock,
              TransactionType type,
              double amount,
              int quantity
     ){
-        Transactions transactions = new Transactions();
+        TransactionsEntity transactions = new TransactionsEntity();
         transactions.setUserId(userId);
-        transactions.setStock(stock);
+        transactions.setTxnId(txnId);
+        transactions.setStockSymbol(stock);
         transactions.setPrice(amount);
         transactions.setTransactionType(type);
         transactions.setQuantity(quantity);
         transactions.setTimestamp(LocalDateTime.now());
+
+        transactionsRepository.save(transactions);
+        System.out.println("New transaction created - txn : " + transactions.getTxnId() + " , type : " + transactions.getTransactionType());
     }
 }

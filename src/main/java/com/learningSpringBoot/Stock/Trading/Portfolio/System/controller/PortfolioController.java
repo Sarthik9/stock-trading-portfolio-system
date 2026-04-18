@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/Portfolio")
+@RequestMapping("/portfolio")
 public class PortfolioController {
 
     @Autowired

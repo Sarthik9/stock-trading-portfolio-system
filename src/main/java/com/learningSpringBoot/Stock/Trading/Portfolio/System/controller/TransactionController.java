@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/Transactions")
+@RequestMapping("/transactions")
 public class TransactionController {
 
     @Autowired

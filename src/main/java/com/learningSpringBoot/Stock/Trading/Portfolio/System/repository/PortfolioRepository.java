@@ -12,4 +12,6 @@ public interface PortfolioRepository extends JpaRepository<PortfolioEntity, UUID
 
     Optional<PortfolioEntity> findByUid(UUID uid);
 
+    Optional<PortfolioEntity> findByUidAndStock(UUID uid, String stock);
+
 }

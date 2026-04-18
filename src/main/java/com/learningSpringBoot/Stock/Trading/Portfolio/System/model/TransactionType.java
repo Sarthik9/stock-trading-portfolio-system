@@ -4,5 +4,7 @@ public enum TransactionType {
     BUY,
     SELL,
     DEBIT,
-    CREDIT
+    CREDIT,
+    LOAD_WALLET,
+    WITHDRAW_WALLET
 }

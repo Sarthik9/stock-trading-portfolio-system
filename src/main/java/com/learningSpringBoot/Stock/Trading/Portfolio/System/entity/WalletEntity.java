@@ -10,7 +10,6 @@ import java.util.UUID;
 public class WalletEntity {
 
     @Id
-    @UuidGenerator
     private UUID userId;
     private double balance;
 

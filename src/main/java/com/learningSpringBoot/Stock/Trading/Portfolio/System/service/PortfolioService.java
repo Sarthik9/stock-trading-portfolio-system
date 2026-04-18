@@ -29,4 +29,32 @@ public class PortfolioService {
         portfolio.setTotalInvestment(entity.getTotalInvestment());
         return portfolio;
     }
+
+    public void updatePortfolio(
+            UUID userId,
+            String stock,
+            int quantity,
+            double avgPrice,
+            double totalInvestment
+    ){
+        PortfolioEntity portfolio = new PortfolioEntity();
+        portfolio.setUid(userId);
+        portfolio.setStock(stock);
+        portfolio.setQuantity(quantity);
+        portfolio.setAveragePrice(avgPrice);
+        portfolio.setTotalInvestment(totalInvestment);
+
+        portfolioRepository.save(portfolio);
+        System.out.println("Updated Porfolio for user : " + userId);
+    }
+
+    public void deletePortfolio(
+            UUID userId,
+            String stock
+    ){
+        PortfolioEntity entity = portfolioRepository.findByUidAndStock(userId, stock)
+                .orElseThrow(() -> new RuntimeException("Cannot find stock - " + stock + " in Portfolio"));
+
+        portfolioRepository.delete(entity);
+    }
 }
