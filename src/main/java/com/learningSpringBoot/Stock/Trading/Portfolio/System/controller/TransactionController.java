@@ -1,7 +1,7 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.controller;
 
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Portfolio;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.service.PortfolioService;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Transactions;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.service.TransactionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,16 +13,17 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/Portfolio")
-public class PortfolioController {
+@RequestMapping("/Transactions")
+public class TransactionController {
 
     @Autowired
-    private PortfolioService portfolioService;
+    private TransactionsService transactionsService;
 
-    @GetMapping("/getPortfolio")
-    public ResponseEntity<List<Portfolio>> getPortfolio(@RequestParam UUID userId){
+    @GetMapping("/getTransactions")
+    public ResponseEntity<List<Transactions>> getTransactionsByUserId(@RequestParam UUID userId){
 
-        Portfolio response = portfolioService.getPortfolioByUserId(userId);
+        Transactions response = transactionsService.getTransactionsByUserId(userId);
+
         return ResponseEntity.ok(List.of(response));
     }
 }

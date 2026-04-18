@@ -1,7 +1,6 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.service;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Money;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.StockRequest;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.WalletResponse;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.WalletEntity;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.WalletRepository;
@@ -16,8 +15,10 @@ public class WalletService {
     @Autowired
     private WalletRepository walletRepository;
 
-    public WalletResponse getWalletBalance(StockRequest request) {
-        WalletEntity entity = walletRepository.getReferenceById(request.getUserId());
+    public WalletResponse getWalletBalance(UUID userId) {
+        WalletEntity entity = walletRepository
+                .findByUserId(userId)
+                .orElseThrow(()-> new RuntimeException("Wallet not found"));
         return mapToWalletResponse(entity);
     }
 

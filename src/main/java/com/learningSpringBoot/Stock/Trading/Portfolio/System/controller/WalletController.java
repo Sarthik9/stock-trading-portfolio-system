@@ -6,27 +6,25 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.WalletResponse;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/Wallet")
 public class WalletController {
 
     @Autowired
     private WalletService walletService;
 
+    @GetMapping("/getBalance/{userId}")
     public ResponseEntity<WalletResponse> getBalanceById(@PathVariable UUID userId){
 
-        StockRequest request = new StockRequest();
-        request.setUserId(userId);
-
-        WalletResponse response = walletService.getWalletBalance(request);
+        WalletResponse response = walletService.getWalletBalance(userId);
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/addMoney")
     public ResponseEntity<WalletResponse> addMoney(@RequestBody Money money){
         WalletResponse response = walletService.addMoney(money);
         return ResponseEntity.ok(response);
