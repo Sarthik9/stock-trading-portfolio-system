@@ -22,7 +22,7 @@ public class PortfolioController {
     @GetMapping("/getPortfolio")
     public ResponseEntity<List<Portfolio>> getPortfolio(@RequestParam UUID userId){
 
-        Portfolio response = portfolioService.getPortfolioByUserId(userId);
-        return ResponseEntity.ok(List.of(response));
+        List<Portfolio> response = portfolioService.getPortfolioByUserId(userId);
+        return ResponseEntity.ok(response);
     }
 }

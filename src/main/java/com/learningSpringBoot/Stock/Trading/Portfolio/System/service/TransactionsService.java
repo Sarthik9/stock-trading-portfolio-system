@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -16,29 +18,31 @@ public class TransactionsService {
     @Autowired
     private TransactionsRepository transactionsRepository;
 
-    public Transactions getTransactionsByUserId(UUID userId) {
+    public List<Transactions> getTransactionsByUserId(UUID userId) {
 
-        TransactionsEntity entity = transactionsRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Transactions not found for userId: " + userId));
+        List<TransactionsEntity> entity = transactionsRepository.findAllByUserId(userId);
 
         return mapToTransactions(entity);
     }
 
-    private Transactions mapToTransactions(TransactionsEntity entity) {
-        Transactions transactions = new Transactions();
-        transactions.setUserId(entity.getUserId());
-        transactions.setTxnId(entity.getTxnId());
-        transactions.setStock(entity.getStockSymbol());
-        transactions.setQuantity(entity.getQuantity());
-        transactions.setPrice(entity.getPrice());
-        transactions.setTransactionType(entity.getTransactionType());
-        transactions.setTimestamp(entity.getTimestamp());
+    private List<Transactions> mapToTransactions(List<TransactionsEntity> entity) {
+        List<Transactions> transactions = new ArrayList<>();
+        for(TransactionsEntity entityObj : entity) {
+            Transactions transaction = new Transactions();
+            transaction.setUserId(entityObj.getUserId());
+            transaction.setTxnId(entityObj.getTxnId());
+            transaction.setStock(entityObj.getStockSymbol());
+            transaction.setQuantity(entityObj.getQuantity());
+            transaction.setPrice(entityObj.getPrice());
+            transaction.setTransactionType(entityObj.getTransactionType());
+            transaction.setTimestamp(entityObj.getTimestamp());
+            transactions.add(transaction);
+        }
         return transactions;
     }
 
     public void createTransaction(
              UUID userId,
-             UUID txnId,
              String stock,
              TransactionType type,
              double amount,
@@ -46,7 +50,6 @@ public class TransactionsService {
     ){
         TransactionsEntity transactions = new TransactionsEntity();
         transactions.setUserId(userId);
-        transactions.setTxnId(txnId);
         transactions.setStockSymbol(stock);
         transactions.setPrice(amount);
         transactions.setTransactionType(type);

@@ -20,12 +20,12 @@ public class StockController {
     private StockService stockService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<StockResponse> getOrderByUserId(@PathVariable UUID userId){
+    public ResponseEntity<List<StockResponse>> getOrderByUserId(@PathVariable UUID userId){
 
         StockRequest requestObj = new StockRequest();
         requestObj.setUserId(userId);
 
-        StockResponse response = stockService.getOrderDetails(requestObj);
+        List<StockResponse> response = stockService.getOrderDetails(requestObj);
         return ResponseEntity.ok(response);
     }
 

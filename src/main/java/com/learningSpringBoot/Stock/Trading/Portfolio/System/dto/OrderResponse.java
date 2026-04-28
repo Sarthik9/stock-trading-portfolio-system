@@ -7,7 +7,7 @@ import java.util.UUID;
 public class OrderResponse {
 
     private UUID uid;
-    private String orderId;
+    private long orderId;
     private String status;
     private OrderType orderType;
 
@@ -19,7 +19,7 @@ public class OrderResponse {
         this.orderType = orderType;
     }
 
-    public void setOrderId(String orderId) {
+    public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
 
@@ -27,7 +27,7 @@ public class OrderResponse {
         this.status = status;
     }
 
-    public String getOrderId() {
+    public long getOrderId() {
         return orderId;
     }
 

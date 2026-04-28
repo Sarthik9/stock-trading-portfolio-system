@@ -1,21 +1,31 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
 @Entity
 public class PortfolioEntity {
 
-    @UuidGenerator
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long orderId;
     private UUID uid;
     private String stock;
     private int quantity;
     private double averagePrice;
     private double totalInvestment;
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
 
     public UUID getUid() {
         return uid;

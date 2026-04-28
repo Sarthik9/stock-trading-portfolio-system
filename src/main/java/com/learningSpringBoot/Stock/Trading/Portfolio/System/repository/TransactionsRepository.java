@@ -4,12 +4,12 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.Transactions
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface TransactionsRepository extends JpaRepository<TransactionsEntity, UUID> {
 
-     Optional<TransactionsEntity> findByUserId(UUID userId);
+     List<TransactionsEntity> findAllByUserId(UUID userId);
 
 }

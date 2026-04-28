@@ -2,10 +2,19 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
 public class Portfolio {
 
+    private long orderId;
     private String stock;
     private int quantity;
     private double avgPrice;  // Average price to calculate Profit
     private double totalInvestment;
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
 
     public String getStock() {
         return stock;

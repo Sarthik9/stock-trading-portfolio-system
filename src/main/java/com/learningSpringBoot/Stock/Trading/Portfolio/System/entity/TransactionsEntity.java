@@ -1,10 +1,7 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.entity;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
@@ -13,9 +10,9 @@ import java.util.UUID;
 @Entity
 public class TransactionsEntity {
 
-    @UuidGenerator
     @Id
-    private UUID txnId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long txnId;
     private UUID userId;
     private String stockSymbol;
     private int quantity;
@@ -25,11 +22,11 @@ public class TransactionsEntity {
     private TransactionType transactionType;  // "BUY", "SELL", "DEBIT", "CREDIT"
     private LocalDateTime timestamp;
 
-    public UUID getTxnId() {
+    public long getTxnId() {
         return txnId;
     }
 
-    public void setTxnId(UUID txnId) {
+    public void setTxnId(long txnId) {
         this.txnId = txnId;
     }
 

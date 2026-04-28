@@ -4,6 +4,7 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.PortfolioEnt
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,6 +12,8 @@ import java.util.UUID;
 public interface PortfolioRepository extends JpaRepository<PortfolioEntity, UUID> {
 
     Optional<PortfolioEntity> findByUid(UUID uid);
+
+    List<PortfolioEntity> findAllByUid(UUID uid);
 
     Optional<PortfolioEntity> findByUidAndStock(UUID uid, String stock);
 

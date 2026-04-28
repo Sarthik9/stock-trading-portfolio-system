@@ -5,9 +5,11 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.StockEntity;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.StockRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,41 +27,51 @@ public class StockService {
     @Autowired
     private TransactionsService transactionsService;
 
-    public StockResponse getOrderDetails(StockRequest requestObj){
-        StockEntity responseData = stockRepository.getById(requestObj.getUserId());
+    public List<StockResponse> getOrderDetails(StockRequest requestObj){
+        List<StockEntity> responseData = stockRepository.findAllByUid(requestObj.getUserId());
 
         return mapResponseDataToDTO(responseData);
     }
 
-    private StockResponse mapResponseDataToDTO(StockEntity responseData) {
+    private List<StockResponse> mapResponseDataToDTO(List<StockEntity> responseData) {
 
-        StockResponse response = new StockResponse();
-        response.setUserId(responseData.getuId());
-        response.setStockSymbol(responseData.getStock());
-        response.setPrice(responseData.getPrice());
-        response.setQuantity(responseData.getQuantity());
-        return response;
+        List<StockResponse> orders = new ArrayList<>();
+        for(StockEntity entity : responseData) {
+            StockResponse response = new StockResponse();
+            response.setUserId(entity.getuid());
+            response.setOrderId(entity.getOrderId());
+            response.setStockSymbol(entity.getStock());
+            response.setOrderType(entity.getOrderType());
+            response.setPrice(entity.getPrice());
+            response.setQuantity(entity.getQuantity());
+            orders.add(response);
+        }
+        return orders;
     }
 
+    //Orders are historical records
+    @Transactional
     public OrderResponse createNewOrder(Order order) {
 
         // OrderType - BUY
-        // check if user has balance or not
-        WalletResponse currentBalance = walletService.getWalletBalance(order.getuId());
         if(order.getOrderType().equals(OrderType.BUY)) {
+
+            // check if user has balance or not
+            WalletResponse currentBalance = walletService.getWalletBalance(order.getuid());
 
             long calculatedOrderPrice = order.getPrice() * order.getQuantity();
 
         if(currentBalance.getBalance() >= calculatedOrderPrice){
 
-            // Update Portfolio
-            portfolioService.updatePortfolio(order.getuId(), order.getStock(), order.getQuantity(), order.getPrice(), calculatedOrderPrice);
-
             // Debit wallet
-            walletService.debit(order.getuId(), calculatedOrderPrice);
+            walletService.debit(order.getuid(), calculatedOrderPrice);
+
+            // Update Portfolio
+            portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(),
+                    order.getPrice(), calculatedOrderPrice);
 
             // Create transaction
-            transactionsService.createTransaction(order.getuId(), null, order.getStock(), TransactionType.BUY, calculatedOrderPrice,
+            transactionsService.createTransaction(order.getuid(), order.getStock(), TransactionType.BUY, calculatedOrderPrice,
                     order.getQuantity());
 
         }
@@ -69,34 +81,24 @@ public class StockService {
         }
 
         else {
-         // Ordertype - SELL
 
-            Portfolio stockHoldings = portfolioService.getPortfolioByUserId(order.getuId());
+            // Ordertype - SELL
+            Portfolio stockHoldings = portfolioService.getPortfolioByUserIdAndStock(order.getuid(), order.getStock());
             int quantityOfStocks = stockHoldings.getQuantity();
             int quantityOfStocksToSell = order.getQuantity();
-            int remainingStocksQuantity =  quantityOfStocks - quantityOfStocksToSell;
 
             if (quantityOfStocksToSell > quantityOfStocks)
                 throw new RuntimeException("Not enough stocks to sell !");
 
             // Update Portfolio
-            if (quantityOfStocksToSell < quantityOfStocks){
-                // reduce quantity of stocks from holdings
-                portfolioService.updatePortfolio(order.getuId(), order.getStock(), remainingStocksQuantity, stockHoldings.getAvgPrice(),
-                        stockHoldings.getTotalInvestment() - remainingStocksQuantity*order.getPrice());
-                System.out.println("Sold successfully - stocks : " + order.getStock() + " , quantity : " + order.getQuantity());
-            }
-            else {
-                // delete from portfolio
-                portfolioService.deletePortfolio(order.getuId(), order.getStock());
-                System.out.println("Sold successfully - stocks : " + order.getStock());
-            }
+            portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(), 0.0, 0.0);
+            System.out.println("Sold successfully - stocks : " + order.getStock() + " , quantity : " + order.getQuantity());
 
             // Credit Wallet
-            walletService.credit(order.getuId(), quantityOfStocksToSell*stockHoldings.getAvgPrice());
+            walletService.credit(order.getuid(), quantityOfStocksToSell*stockHoldings.getAvgPrice());
 
-            // Create Transaction
-            transactionsService.createTransaction(order.getuId(), null, order.getStock(), TransactionType.CREDIT,
+            // Create transaction
+            transactionsService.createTransaction(order.getuid(), order.getStock(), TransactionType.SELL,
                     quantityOfStocksToSell*stockHoldings.getAvgPrice(), order.getQuantity());
         }
 
@@ -105,20 +107,23 @@ public class StockService {
     }
 
     private StockEntity convertToOrderEntity(Order order) {
+
         StockEntity entity = new StockEntity();
-        entity.setStock(order.getStock());
-        entity.setuId(order.getuId());
-        entity.setOrderType(order.getOrderType());
-        entity.setQuantity(order.getQuantity());
-        entity.setPrice(order.getPrice());
+            // New user and order
+            entity.setStock(order.getStock());
+            entity.setuid(order.getuid());
+            entity.setOrderType(order.getOrderType());
+            entity.setQuantity(order.getQuantity());
+            entity.setPrice(order.getPrice());
+
         return entity;
     }
 
     private OrderResponse convertToOrderResponse(StockEntity response) {
         OrderResponse result = new OrderResponse();
 
-        result.setUid(response.getuId());
-        result.setOrderId("AA");
+        result.setUid(response.getuid());
+        result.setOrderId(response.getOrderId());
         result.setStatus("SUCCESS");
         result.setOrderType(response.getOrderType());
         return result;
@@ -126,8 +131,6 @@ public class StockService {
 
     public List<StockResponse> fetchOrders() {
         List<StockEntity> ordersList = stockRepository.findAll();
-        return ordersList.stream()
-                .map(this::mapResponseDataToDTO)
-                .toList();
+        return mapResponseDataToDTO(ordersList);
     }
 }

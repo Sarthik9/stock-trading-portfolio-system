@@ -6,7 +6,8 @@ import java.util.UUID;
 
 public class Order {
 
-    private UUID uId;
+    private UUID uid;
+    private long orderId;
     private String stock;
     private long price;
     private int quantity;
@@ -20,12 +21,20 @@ public class Order {
         this.price = price;
     }
 
-    public UUID getuId() {
-        return uId;
+    public UUID getuid() {
+        return uid;
     }
 
-    public void setuId(UUID uId) {
-        this.uId = uId;
+    public void setuId(UUID uid) {
+        this.uid = uid;
+    }
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public String getStock() {

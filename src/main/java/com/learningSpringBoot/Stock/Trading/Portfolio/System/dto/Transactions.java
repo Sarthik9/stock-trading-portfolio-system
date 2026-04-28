@@ -8,7 +8,7 @@ import java.util.UUID;
 public class Transactions {
 
     private UUID userId;
-    private UUID txnId;
+    private long txnId;
     private String stock;
     private int quantity;
     private double price;
@@ -24,11 +24,11 @@ public class Transactions {
         this.userId = userId;
     }
 
-    public UUID getTxnId() {
+    public long getTxnId() {
         return txnId;
     }
 
-    public void setTxnId(UUID txnId) {
+    public void setTxnId(long txnId) {
         this.txnId = txnId;
     }
 

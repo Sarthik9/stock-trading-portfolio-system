@@ -22,8 +22,8 @@ public class TransactionController {
     @GetMapping("/getTransactions")
     public ResponseEntity<List<Transactions>> getTransactionsByUserId(@RequestParam UUID userId){
 
-        Transactions response = transactionsService.getTransactionsByUserId(userId);
+        List<Transactions> response = transactionsService.getTransactionsByUserId(userId);
 
-        return ResponseEntity.ok(List.of(response));
+        return ResponseEntity.ok(response);
     }
 }

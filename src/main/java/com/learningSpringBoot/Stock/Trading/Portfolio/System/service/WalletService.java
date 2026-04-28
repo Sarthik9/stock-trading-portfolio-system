@@ -6,6 +6,7 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.WalletEntity
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.TransactionsRepository;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.WalletRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ public class WalletService {
         return response;
     }
 
+    @Transactional
     public WalletResponse addMoney(Money money) {
 
         // check existing User and update balance accordingly
@@ -47,11 +49,12 @@ public class WalletService {
         entity.setBalance(entity.getBalance() + money.getMoney());
 
         // create Transaction
-        transactionsService.createTransaction(money.getUid(), null, null, TransactionType.LOAD_WALLET, money.getMoney(), 0);
+        transactionsService.createTransaction(money.getUid(), null, TransactionType.LOAD_WALLET, money.getMoney(), 0);
 
         return mapToWalletResponse(walletRepository.save(entity));
     }
 
+    @Transactional
     public void debit(
             UUID userId,
             double amount
@@ -63,6 +66,7 @@ public class WalletService {
         walletRepository.save(entity);
     }
 
+    @Transactional
     public void credit(UUID userId, double amount) {
         WalletEntity entity = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Wallet not found for user : " + userId));
