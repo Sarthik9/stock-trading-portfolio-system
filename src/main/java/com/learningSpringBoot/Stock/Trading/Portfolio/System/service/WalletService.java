@@ -3,8 +3,9 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.service;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Money;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.WalletResponse;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.WalletEntity;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.InsufficiencyException;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.WalletNotFoundException;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
-import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.TransactionsRepository;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.WalletRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,12 @@ public class WalletService {
     @Autowired
     private TransactionsService transactionsService;
 
+    private static final String WALLET_NOT_FOUND = "Wallet not found for user : ";
+
     public WalletResponse getWalletBalance(UUID userId) {
         WalletEntity entity = walletRepository
                 .findByUserId(userId)
-                .orElseThrow(()-> new RuntimeException("Wallet not found"));
+                .orElseThrow(()-> new WalletNotFoundException(WALLET_NOT_FOUND + userId));
         return mapToWalletResponse(entity);
     }
 
@@ -61,7 +64,10 @@ public class WalletService {
     ){
 
         WalletEntity entity = walletRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Wallet not found for user : " + userId));
+                .orElseThrow(() -> new WalletNotFoundException(WALLET_NOT_FOUND + userId));
+        if (entity.getBalance() < amount){
+            throw new InsufficiencyException("Not enough balance");
+        }
         entity.setBalance(entity.getBalance() - amount);
         walletRepository.save(entity);
     }
@@ -69,7 +75,7 @@ public class WalletService {
     @Transactional
     public void credit(UUID userId, double amount) {
         WalletEntity entity = walletRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Wallet not found for user : " + userId));
+                .orElseThrow(() -> new WalletNotFoundException(WALLET_NOT_FOUND + userId));
         entity.setBalance(entity.getBalance() + amount);
         walletRepository.save(entity);
     }

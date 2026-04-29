@@ -2,6 +2,7 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.service;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.*;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.StockEntity;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.InsufficiencyException;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.StockRepository;
@@ -76,7 +77,7 @@ public class StockService {
 
         }
 
-        else throw new RuntimeException("Not enough Balance for buying " + order.getStock() + " stocks : quantity - " + order.getQuantity());
+        else throw new InsufficiencyException("Not Enough Balance");
 
         }
 
@@ -88,7 +89,7 @@ public class StockService {
             int quantityOfStocksToSell = order.getQuantity();
 
             if (quantityOfStocksToSell > quantityOfStocks)
-                throw new RuntimeException("Not enough stocks to sell !");
+                throw new InsufficiencyException("Not enough stocks to sell !");
 
             // Update Portfolio
             portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(), 0.0, 0.0);

@@ -2,6 +2,8 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.service;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Portfolio;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.PortfolioEntity;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.InsufficiencyException;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.PortfolioNotFoundException;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.PortfolioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ public class PortfolioService {
 
     public Portfolio getPortfolioByUserIdAndStock(UUID userId, String stock) {
         PortfolioEntity entity = portfolioRepository.findByUidAndStock(userId, stock)
-                .orElseThrow( () -> new RuntimeException( ("Portfolio not found for user with uid : " + userId + " , stock : " + stock)));
+                .orElseThrow( () -> new PortfolioNotFoundException( ("Portfolio not found for user with uid : " + userId + " , stock : " + stock)));
 
         return mapToPortfolio(Collections.singletonList(entity)).get(0);
     }
@@ -73,10 +75,10 @@ public class PortfolioService {
         } else {
             // SELLING EXISTING STOCK, reduce quantity
             PortfolioEntity portfolio = optional
-                    .orElseThrow(() -> new RuntimeException("Portfolio not found for user with uid : " + userId + " , stock : " + stock));
+                    .orElseThrow(() -> new PortfolioNotFoundException("Portfolio not found for user with uid : " + userId + " , stock : " + stock));
 
             if (quantity > portfolio.getQuantity())
-                throw new RuntimeException("Not enough quantity to sell");
+                throw new InsufficiencyException("Not enough stocks to sell");
 
             int remainingQty = portfolio.getQuantity() - quantity;
             if (remainingQty == 0) {
