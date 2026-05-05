@@ -1,10 +1,18 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class Money {
+
+    @NotNull(message = "uid is required")
     private UUID uid;
-    private double money;
+
+    @Positive(message = "amount should be greater than 0")
+    private BigDecimal money;
 
     public UUID getUid() {
         return uid;
@@ -14,11 +22,11 @@ public class Money {
         this.uid = uid;
     }
 
-    public double getMoney() {
+    public BigDecimal getMoney() {
         return money;
     }
 
-    public void setMoney(double money) {
+    public void setMoney(BigDecimal money) {
         this.money = money;
     }
 }

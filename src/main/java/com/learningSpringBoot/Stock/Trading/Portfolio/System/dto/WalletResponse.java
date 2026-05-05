@@ -1,17 +1,18 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class WalletResponse {
 
     private UUID uid;
-    private double balance;
+    private BigDecimal balance;
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

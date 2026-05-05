@@ -2,6 +2,7 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class StockResponse {
@@ -11,7 +12,7 @@ public class StockResponse {
     private String stockSymbol;
     private int quantity;
     private OrderType orderType;
-    private long price;
+    private BigDecimal price;
 
     public UUID getUserId() {
         return userId;
@@ -53,11 +54,11 @@ public class StockResponse {
         this.orderType = orderType;
     }
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 }

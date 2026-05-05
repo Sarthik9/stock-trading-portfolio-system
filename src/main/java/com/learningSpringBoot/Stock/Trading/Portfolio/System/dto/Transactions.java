@@ -2,6 +2,7 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ public class Transactions {
     private long txnId;
     private String stock;
     private int quantity;
-    private double price;
+    private BigDecimal price;
     private TransactionType transactionType;
     private LocalDateTime timestamp;
 
@@ -48,11 +49,11 @@ public class Transactions {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

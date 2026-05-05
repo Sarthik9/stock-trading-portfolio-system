@@ -2,6 +2,7 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.controller;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Portfolio;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.service.PortfolioService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ public class PortfolioController {
     private PortfolioService portfolioService;
 
     @GetMapping("/getPortfolio")
-    public ResponseEntity<List<Portfolio>> getPortfolio(@RequestParam UUID userId){
+    public ResponseEntity<List<Portfolio>> getPortfolio(@RequestParam @NotNull UUID userId){
 
         List<Portfolio> response = portfolioService.getPortfolioByUserId(userId);
         return ResponseEntity.ok(response);

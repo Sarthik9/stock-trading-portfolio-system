@@ -4,6 +4,7 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionTy
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ public class TransactionsEntity {
     private UUID userId;
     private String stockSymbol;
     private int quantity;
-    private double price;
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;  // "BUY", "SELL", "DEBIT", "CREDIT"
@@ -54,11 +55,11 @@ public class TransactionsEntity {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

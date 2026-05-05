@@ -2,6 +2,7 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.controller;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Transactions;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.service.TransactionsService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ public class TransactionController {
     private TransactionsService transactionsService;
 
     @GetMapping("/getTransactions")
-    public ResponseEntity<List<Transactions>> getTransactionsByUserId(@RequestParam UUID userId){
+    public ResponseEntity<List<Transactions>> getTransactionsByUserId(@RequestParam @NotNull UUID userId){
 
         List<Transactions> response = transactionsService.getTransactionsByUserId(userId);
 

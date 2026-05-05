@@ -7,6 +7,7 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.Transact
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class TransactionsService {
              UUID userId,
              String stock,
              TransactionType type,
-             double amount,
+             BigDecimal amount,
              int quantity
     ){
         TransactionsEntity transactions = new TransactionsEntity();

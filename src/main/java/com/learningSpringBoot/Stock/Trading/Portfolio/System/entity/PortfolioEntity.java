@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -16,8 +17,8 @@ public class PortfolioEntity {
     private UUID uid;
     private String stock;
     private int quantity;
-    private double averagePrice;
-    private double totalInvestment;
+    private BigDecimal averagePrice;
+    private BigDecimal totalInvestment;
 
     public long getOrderId() {
         return orderId;
@@ -51,19 +52,19 @@ public class PortfolioEntity {
         this.quantity = quantity;
     }
 
-    public double getAveragePrice() {
+    public BigDecimal getAveragePrice() {
         return averagePrice;
     }
 
-    public void setAveragePrice(double averagePrice) {
+    public void setAveragePrice(BigDecimal averagePrice) {
         this.averagePrice = averagePrice;
     }
 
-    public double getTotalInvestment() {
+    public BigDecimal getTotalInvestment() {
         return totalInvestment;
     }
 
-    public void setTotalInvestment(double totalInvestment) {
+    public void setTotalInvestment(BigDecimal totalInvestment) {
         this.totalInvestment = totalInvestment;
     }
 }

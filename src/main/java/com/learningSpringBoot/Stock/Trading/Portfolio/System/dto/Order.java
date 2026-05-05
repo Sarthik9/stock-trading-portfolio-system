@@ -1,23 +1,37 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class Order {
 
+    @NotNull(message = "uid is required")
     private UUID uid;
     private long orderId;
+
+    @NotNull(message = "stock name is reuired")
     private String stock;
-    private long price;
+
+    @Positive(message = "price should be greater than 0")
+    private BigDecimal price;
+
+    @Min(message = "minimum quantity is 1", value = 1)
     private int quantity;
+
+    @NotNull(message = "Order type should be Buy or Sell")
     private OrderType orderType;
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

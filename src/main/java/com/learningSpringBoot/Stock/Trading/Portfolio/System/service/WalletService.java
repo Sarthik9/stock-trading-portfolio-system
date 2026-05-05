@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -45,11 +46,16 @@ public class WalletService {
         // if not found create new wallet Entity
         WalletEntity entity = walletRepository
                 .findByUserId(money.getUid())
-                .orElse(new WalletEntity());
+                .orElseGet(() -> {
+                    WalletEntity w = new WalletEntity();
+                            w.setUserId(money.getUid());
+                            w.setBalance(BigDecimal.ZERO);
+                            return w;
+                });
 
         entity.setUserId(money.getUid());
 
-        entity.setBalance(entity.getBalance() + money.getMoney());
+        entity.setBalance(entity.getBalance().add(money.getMoney()));
 
         // create Transaction
         transactionsService.createTransaction(money.getUid(), null, TransactionType.LOAD_WALLET, money.getMoney(), 0);
@@ -60,23 +66,23 @@ public class WalletService {
     @Transactional
     public void debit(
             UUID userId,
-            double amount
+            BigDecimal amount
     ){
 
         WalletEntity entity = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new WalletNotFoundException(WALLET_NOT_FOUND + userId));
-        if (entity.getBalance() < amount){
+        if (entity.getBalance().compareTo(amount) > 0){
             throw new InsufficiencyException("Not enough balance");
         }
-        entity.setBalance(entity.getBalance() - amount);
+        entity.setBalance(entity.getBalance().subtract(amount));
         walletRepository.save(entity);
     }
 
     @Transactional
-    public void credit(UUID userId, double amount) {
+    public void credit(UUID userId, BigDecimal amount) {
         WalletEntity entity = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new WalletNotFoundException(WALLET_NOT_FOUND + userId));
-        entity.setBalance(entity.getBalance() + amount);
+        entity.setBalance(entity.getBalance().add(amount));
         walletRepository.save(entity);
     }
 }

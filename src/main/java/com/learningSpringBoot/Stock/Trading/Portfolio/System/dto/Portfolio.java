@@ -1,12 +1,14 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
+import java.math.BigDecimal;
+
 public class Portfolio {
 
     private long orderId;
     private String stock;
     private int quantity;
-    private double avgPrice;  // Average price to calculate Profit
-    private double totalInvestment;
+    private BigDecimal avgPrice;  // Average price to calculate Profit
+    private BigDecimal totalInvestment;
 
     public long getOrderId() {
         return orderId;
@@ -32,19 +34,19 @@ public class Portfolio {
         this.quantity = quantity;
     }
 
-    public double getAvgPrice() {
+    public BigDecimal getAvgPrice() {
         return avgPrice;
     }
 
-    public void setAvgPrice(double avgPrice) {
+    public void setAvgPrice(BigDecimal avgPrice) {
         this.avgPrice = avgPrice;
     }
 
-    public double getTotalInvestment() {
+    public BigDecimal getTotalInvestment() {
         return totalInvestment;
     }
 
-    public void setTotalInvestment(double totalInvestment) {
+    public void setTotalInvestment(BigDecimal totalInvestment) {
         this.totalInvestment = totalInvestment;
     }
 }

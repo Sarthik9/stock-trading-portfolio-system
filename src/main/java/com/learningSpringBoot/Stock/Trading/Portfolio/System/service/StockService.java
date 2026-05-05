@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,9 +61,10 @@ public class StockService {
             // check if user has balance or not
             WalletResponse currentBalance = walletService.getWalletBalance(order.getuid());
 
-            long calculatedOrderPrice = order.getPrice() * order.getQuantity();
+            BigDecimal calculatedOrderPrice = order.getPrice().multiply(BigDecimal.valueOf(order.getQuantity()));
 
-        if(currentBalance.getBalance() >= calculatedOrderPrice){
+            // balance > orderPrice
+        if(currentBalance.getBalance().compareTo(calculatedOrderPrice) > 0){
 
             // Debit wallet
             walletService.debit(order.getuid(), calculatedOrderPrice);
@@ -92,15 +94,15 @@ public class StockService {
                 throw new InsufficiencyException("Not enough stocks to sell !");
 
             // Update Portfolio
-            portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(), 0.0, 0.0);
+            portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(), new BigDecimal("0"), new BigDecimal("0"));
             System.out.println("Sold successfully - stocks : " + order.getStock() + " , quantity : " + order.getQuantity());
 
             // Credit Wallet
-            walletService.credit(order.getuid(), quantityOfStocksToSell*stockHoldings.getAvgPrice());
+            walletService.credit(order.getuid(), stockHoldings.getAvgPrice().multiply(BigDecimal.valueOf(quantityOfStocksToSell)));
 
             // Create transaction
             transactionsService.createTransaction(order.getuid(), order.getStock(), TransactionType.SELL,
-                    quantityOfStocksToSell*stockHoldings.getAvgPrice(), order.getQuantity());
+                    stockHoldings.getAvgPrice().multiply(BigDecimal.valueOf(quantityOfStocksToSell)), order.getQuantity());
         }
 
         StockEntity orderEntity = convertToOrderEntity(order);

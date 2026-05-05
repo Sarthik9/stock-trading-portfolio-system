@@ -3,6 +3,7 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.entity;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -13,7 +14,7 @@ public class StockEntity {
     private long orderId;
     private String stock;
     private UUID uid;
-    private long price;
+    private BigDecimal price;
     private int quantity;
 
     @Enumerated(EnumType.STRING)
@@ -43,11 +44,11 @@ public class StockEntity {
         this.orderId = orderId;
     }
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

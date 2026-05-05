@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -11,7 +12,7 @@ public class WalletEntity {
 
     @Id
     private UUID userId;
-    private double balance;
+    private BigDecimal balance;
 
     public UUID getUserId() {
         return userId;
@@ -21,11 +22,11 @@ public class WalletEntity {
         this.userId = userId;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 }

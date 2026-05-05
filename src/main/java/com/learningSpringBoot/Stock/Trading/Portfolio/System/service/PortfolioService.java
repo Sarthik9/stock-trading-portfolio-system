@@ -9,6 +9,7 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.Portfoli
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -49,8 +50,8 @@ public class PortfolioService {
             String stock,
             OrderType orderType,
             int quantity,
-            double avgPrice,
-            double totalInvestment
+            BigDecimal avgPrice,
+            BigDecimal totalInvestment
     ){
 
         Optional<PortfolioEntity> optional = portfolioRepository.findByUidAndStock(userId, stock);
@@ -61,7 +62,7 @@ public class PortfolioService {
                 entity = optional.get();
                         // BUYING SAME STOCK, Increase quantity
                         entity.setQuantity(quantity + entity.getQuantity());
-                        entity.setTotalInvestment(totalInvestment + quantity * avgPrice);
+                        entity.setTotalInvestment(totalInvestment.add(avgPrice.multiply(BigDecimal.valueOf(quantity))));
             } else {
                 // BUYING A NEW STOCK
                 entity = new PortfolioEntity();
@@ -85,7 +86,7 @@ public class PortfolioService {
                 portfolioRepository.delete(portfolio);
             } else {
                 portfolio.setQuantity(remainingQty);
-                portfolio.setTotalInvestment(portfolio.getTotalInvestment() - portfolio.getAveragePrice() * quantity);
+                portfolio.setTotalInvestment(portfolio.getTotalInvestment().subtract(portfolio.getAveragePrice().multiply(BigDecimal.valueOf(quantity))));
                 portfolioRepository.save(portfolio);
             }
         }

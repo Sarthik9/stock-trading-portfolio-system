@@ -5,6 +5,8 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.OrderResponse;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.StockRequest;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.StockResponse;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.service.StockService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ public class StockController {
     private StockService stockService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<StockResponse>> getOrderByUserId(@PathVariable UUID userId){
+    public ResponseEntity<List<StockResponse>> getOrderByUserId(@PathVariable @NotNull UUID userId){
 
         StockRequest requestObj = new StockRequest();
         requestObj.setUserId(userId);
@@ -37,7 +39,7 @@ public class StockController {
     }
 
     @PostMapping("/createOrder")
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody Order order){
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid Order order){
 
         OrderResponse response = stockService.createNewOrder(order);
         return ResponseEntity.ok(response);
