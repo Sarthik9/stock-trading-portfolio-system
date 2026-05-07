@@ -71,7 +71,7 @@ public class WalletService {
 
         WalletEntity entity = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new WalletNotFoundException(WALLET_NOT_FOUND + userId));
-        if (entity.getBalance().compareTo(amount) > 0){
+        if (entity.getBalance().compareTo(amount) < 0){
             throw new InsufficiencyException("Not enough balance");
         }
         entity.setBalance(entity.getBalance().subtract(amount));

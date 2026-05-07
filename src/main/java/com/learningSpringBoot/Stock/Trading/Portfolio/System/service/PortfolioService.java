@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 @Service
@@ -50,8 +51,8 @@ public class PortfolioService {
             String stock,
             OrderType orderType,
             int quantity,
-            BigDecimal avgPrice,
-            BigDecimal totalInvestment
+            BigDecimal price,
+            BigDecimal orderInvestment
     ){
 
         Optional<PortfolioEntity> optional = portfolioRepository.findByUidAndStock(userId, stock);
@@ -61,16 +62,20 @@ public class PortfolioService {
             if ( optional.isPresent() ) {
                 entity = optional.get();
                         // BUYING SAME STOCK, Increase quantity
-                        entity.setQuantity(quantity + entity.getQuantity());
-                        entity.setTotalInvestment(totalInvestment.add(avgPrice.multiply(BigDecimal.valueOf(quantity))));
+                        BigDecimal newTotal = entity.getTotalInvestment().add(orderInvestment);
+                        int newQty = entity.getQuantity() + quantity;
+                        BigDecimal newAvg = newTotal.divide(BigDecimal.valueOf(newQty), 2, RoundingMode.HALF_UP);
+                        entity.setQuantity(newQty);
+                        entity.setAveragePrice(newAvg);
+                        entity.setTotalInvestment(newTotal);
             } else {
                 // BUYING A NEW STOCK
                 entity = new PortfolioEntity();
                 entity.setUid(userId);
                 entity.setStock(stock);
                 entity.setQuantity(quantity);
-                entity.setAveragePrice(avgPrice);
-                entity.setTotalInvestment(totalInvestment);
+                entity.setAveragePrice(price);
+                entity.setTotalInvestment(orderInvestment);
             }
             portfolioRepository.save(entity);
         } else {
