@@ -28,6 +28,6 @@ public class WalletController {
     @PostMapping("/addMoney")
     public ResponseEntity<WalletResponse> addMoney(@RequestBody @Valid Money money){
         WalletResponse response = walletService.addMoney(money);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.created(null).body(response);
     }
 }

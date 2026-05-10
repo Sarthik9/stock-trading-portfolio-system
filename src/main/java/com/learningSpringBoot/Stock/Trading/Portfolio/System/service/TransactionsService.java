@@ -4,6 +4,8 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Transactions;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.TransactionsEntity;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.TransactionsRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ public class TransactionsService {
 
     @Autowired
     private TransactionsRepository transactionsRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionsService.class);
 
     public List<Transactions> getTransactionsByUserId(UUID userId) {
 
@@ -58,6 +62,6 @@ public class TransactionsService {
         transactions.setTimestamp(LocalDateTime.now());
 
         transactionsRepository.save(transactions);
-        System.out.println("New transaction created - txn : " + transactions.getTxnId() + " , type : " + transactions.getTransactionType());
+        logger.info("New transaction created - txn : " + transactions.getTxnId() + " , type : " + transactions.getTransactionType());
     }
 }

@@ -7,6 +7,8 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.StockRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ public class StockService {
 
     @Autowired
     private TransactionsService transactionsService;
+
+    private static final Logger logger = LoggerFactory.getLogger(StockService.class);
 
     public List<StockResponse> getOrderDetails(StockRequest requestObj){
         List<StockEntity> responseData = stockRepository.findAllByUid(requestObj.getUserId());
@@ -95,7 +99,7 @@ public class StockService {
 
             // Update Portfolio
             portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(), new BigDecimal("0"), new BigDecimal("0"));
-            System.out.println("Sold successfully - stocks : " + order.getStock() + " , quantity : " + order.getQuantity());
+            logger.info("Sold successfully - stocks : " + order.getStock() + " , quantity : " + order.getQuantity());
 
             // Credit Wallet
             walletService.credit(order.getuid(), stockHoldings.getAvgPrice().multiply(BigDecimal.valueOf(quantityOfStocksToSell)));

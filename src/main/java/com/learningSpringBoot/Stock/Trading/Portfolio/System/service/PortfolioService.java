@@ -6,6 +6,8 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.Insuffici
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.PortfolioNotFoundException;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.PortfolioRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.*;
 
 @Service
 public class PortfolioService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PortfolioService.class);
 
     @Autowired
     private PortfolioRepository portfolioRepository;
@@ -96,6 +100,6 @@ public class PortfolioService {
             }
         }
 
-        System.out.println("Updated Porfolio for user : " + userId);
+        logger.info("Updated Porfolio for user : " + userId);
     }
 }

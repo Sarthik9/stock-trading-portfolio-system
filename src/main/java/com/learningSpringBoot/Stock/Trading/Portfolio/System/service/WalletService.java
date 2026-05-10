@@ -53,8 +53,6 @@ public class WalletService {
                             return w;
                 });
 
-        entity.setUserId(money.getUid());
-
         entity.setBalance(entity.getBalance().add(money.getMoney()));
 
         // create Transaction

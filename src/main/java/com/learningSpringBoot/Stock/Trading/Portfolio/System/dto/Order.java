@@ -1,9 +1,7 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 
 import java.math.BigDecimal;
@@ -13,14 +11,15 @@ public class Order {
 
     @NotNull(message = "uid is required")
     private UUID uid;
-    private long orderId;
 
-    @NotNull(message = "stock name is reuired")
+    @NotBlank(message = "stock name is required")
     private String stock;
 
+    @NotNull(message = "price is required")
     @Positive(message = "price should be greater than 0")
     private BigDecimal price;
 
+    @NotNull(message = "quantity is required")
     @Min(message = "minimum quantity is 1", value = 1)
     private int quantity;
 
@@ -43,13 +42,6 @@ public class Order {
         this.uid = uid;
     }
 
-    public long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
-    }
 
     public String getStock() {
         return stock;
