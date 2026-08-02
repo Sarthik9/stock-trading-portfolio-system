@@ -68,7 +68,7 @@ public class PortfolioService {
                         // BUYING SAME STOCK, Increase quantity
                         BigDecimal newTotal = entity.getTotalInvestment().add(orderInvestment);
                         int newQty = entity.getQuantity() + quantity;
-                        BigDecimal newAvg = newTotal.divide(BigDecimal.valueOf(newQty), 2, RoundingMode.HALF_UP);
+                        BigDecimal newAvg = newTotal.divide(BigDecimal.valueOf(newQty), 1, RoundingMode.HALF_UP);
                         entity.setQuantity(newQty);
                         entity.setAveragePrice(newAvg);
                         entity.setTotalInvestment(newTotal);
