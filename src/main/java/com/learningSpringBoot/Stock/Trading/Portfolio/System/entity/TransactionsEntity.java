@@ -13,10 +13,18 @@ public class TransactionsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long txnId;
+    private Long txnId;
+
+    @Column(nullable = false)
     private UUID userId;
+
+    @Column(nullable = false, length = 20)
     private String stockSymbol;
-    private int quantity;
+
+    @Column(nullable = false)
+    private Integer quantity;
+
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)

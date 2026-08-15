@@ -1,29 +1,28 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.entity;
 
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.PortfolioId;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
+@IdClass(PortfolioId.class)
 public class PortfolioEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long orderId;
     private UUID uid;
+
+    @Id
     private String stock;
+
     private int quantity;
+
+    @Column(precision = 15, scale = 2)
     private BigDecimal averagePrice;
+
+    @Column(precision = 15, scale = 2)
     private BigDecimal totalInvestment;
-
-    public long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
-    }
 
     public UUID getUid() {
         return uid;

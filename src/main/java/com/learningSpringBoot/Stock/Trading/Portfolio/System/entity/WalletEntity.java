@@ -1,5 +1,6 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import org.hibernate.annotations.UuidGenerator;
@@ -12,6 +13,8 @@ public class WalletEntity {
 
     @Id
     private UUID userId;
+
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal balance;
 
     public UUID getUserId() {

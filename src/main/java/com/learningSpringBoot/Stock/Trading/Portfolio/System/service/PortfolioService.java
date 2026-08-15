@@ -40,7 +40,6 @@ public class PortfolioService {
         List<Portfolio> list = new ArrayList<>();
         for(PortfolioEntity item : entity) {
             Portfolio portfolio = new Portfolio();
-            portfolio.setOrderId(item.getOrderId());
             portfolio.setStock(item.getStock());
             portfolio.setQuantity(item.getQuantity());
             portfolio.setAvgPrice(item.getAveragePrice());

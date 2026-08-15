@@ -14,6 +14,8 @@ public class StockEntity {
     private long orderId;
     private String stock;
     private UUID uid;
+
+    @Column(precision = 15, scale = 2)
     private BigDecimal price;
     private int quantity;
 
