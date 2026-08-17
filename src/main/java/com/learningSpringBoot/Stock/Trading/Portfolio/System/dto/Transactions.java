@@ -10,6 +10,7 @@ public class Transactions {
 
     private UUID userId;
     private long txnId;
+    private long orderId;
     private String stock;
     private int quantity;
     private BigDecimal price;
@@ -33,9 +34,11 @@ public class Transactions {
         this.txnId = txnId;
     }
 
-    public String getStock() {
-        return stock;
-    }
+    public long getOrderId() { return orderId; }
+
+    public void setOrderId(long orderId) { this.orderId = orderId; }
+
+    public String getStock() { return stock; }
 
     public void setStock(String stock) {
         this.stock = stock;

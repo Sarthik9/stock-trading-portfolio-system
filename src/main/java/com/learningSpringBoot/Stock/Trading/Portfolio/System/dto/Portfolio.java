@@ -4,19 +4,10 @@ import java.math.BigDecimal;
 
 public class Portfolio {
 
-    private long orderId;
     private String stock;
     private int quantity;
     private BigDecimal avgPrice;  // Average price to calculate Profit
     private BigDecimal totalInvestment;
-
-    public long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
-    }
 
     public String getStock() {
         return stock;

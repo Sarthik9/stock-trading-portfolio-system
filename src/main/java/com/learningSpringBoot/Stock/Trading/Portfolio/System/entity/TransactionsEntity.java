@@ -9,11 +9,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "transactions")
 public class TransactionsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long txnId;
+
+    private Long orderId;
 
     @Column(nullable = false)
     private UUID userId;
@@ -38,6 +41,10 @@ public class TransactionsEntity {
     public void setTxnId(long txnId) {
         this.txnId = txnId;
     }
+
+    public Long getOrderId() { return orderId; }
+
+    public void setOrderId(Long orderId) { this.orderId = orderId; }
 
     public UUID getUserId() {
         return userId;

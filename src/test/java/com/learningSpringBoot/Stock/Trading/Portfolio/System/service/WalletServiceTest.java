@@ -59,7 +59,7 @@ public class WalletServiceTest {
 
         verify(transactionsService).createTransaction(
                 money.getUid(),
-                null,
+                "",
                 TransactionType.LOAD_WALLET,
                 money.getMoney(),
                 0);
@@ -92,7 +92,7 @@ public class WalletServiceTest {
         verify(walletRepository).save(any(WalletEntity.class));
         verify(transactionsService).createTransaction(
                 money.getUid(),
-                null,
+                "",
                 TransactionType.LOAD_WALLET,
                 money.getMoney(),
                 0);

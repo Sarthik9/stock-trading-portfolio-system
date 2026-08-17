@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
+@Table(name = "portfolio", indexes = @Index(name = "idx_portfolio_uid_stock", columnList = "uid, stock"))
 @IdClass(PortfolioId.class)
 public class PortfolioEntity {
 

@@ -35,7 +35,6 @@ public class PortfolioServiceTest {
 
         PortfolioEntity portfolio = new PortfolioEntity();
         portfolio.setUid(uid);
-        portfolio.setOrderId(1);
         portfolio.setStock("Apple");
         portfolio.setQuantity(2);
         portfolio.setAveragePrice(BigDecimal.valueOf(800));
@@ -47,7 +46,6 @@ public class PortfolioServiceTest {
 
         assertNotNull(response);
         assertEquals(1, response.size());
-        assertEquals(portfolio.getOrderId(), response.get(0).getOrderId());
         assertEquals(portfolio.getStock(), response.get(0).getStock());
         assertEquals(portfolio.getQuantity(), response.get(0).getQuantity());
         assertEquals(portfolio.getAveragePrice(), response.get(0).getAvgPrice());
@@ -61,7 +59,6 @@ public class PortfolioServiceTest {
 
         PortfolioEntity portfolio = new PortfolioEntity();
         portfolio.setUid(uid);
-        portfolio.setOrderId(1);
         portfolio.setStock("Apple");
         portfolio.setQuantity(2);
         portfolio.setAveragePrice(BigDecimal.valueOf(800));
@@ -82,7 +79,6 @@ public class PortfolioServiceTest {
 
         PortfolioEntity portfolio = new PortfolioEntity();
         portfolio.setUid(uid);
-        portfolio.setOrderId(1);
         portfolio.setStock("Apple");
         portfolio.setQuantity(2);
         portfolio.setAveragePrice(BigDecimal.valueOf(800));
@@ -111,7 +107,6 @@ public class PortfolioServiceTest {
 
         PortfolioEntity portfolio = new PortfolioEntity();
         portfolio.setUid(uid);
-        portfolio.setOrderId(1);
         portfolio.setStock("Apple");
         portfolio.setQuantity(5);
         portfolio.setAveragePrice(BigDecimal.valueOf(800));
@@ -162,7 +157,6 @@ public class PortfolioServiceTest {
     void shouldThrowInsufficiencyExceptionWhenSellingStockIsNotEnough() {
         PortfolioEntity portfolio = new PortfolioEntity();
         portfolio.setUid(uid);
-        portfolio.setOrderId(1);
         portfolio.setStock("Microsoft");
         portfolio.setQuantity(2);
         portfolio.setAveragePrice(BigDecimal.valueOf(800));

@@ -1,5 +1,6 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.service;
 
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.OrderResponse;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.Transactions;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.TransactionsEntity;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
@@ -36,6 +37,7 @@ public class TransactionsService {
             Transactions transaction = new Transactions();
             transaction.setUserId(entityObj.getUserId());
             transaction.setTxnId(entityObj.getTxnId());
+            transaction.setOrderId(OrderResponse.getOrderId());
             transaction.setStock(entityObj.getStockSymbol());
             transaction.setQuantity(entityObj.getQuantity());
             transaction.setPrice(entityObj.getPrice());
@@ -55,6 +57,8 @@ public class TransactionsService {
     ){
         TransactionsEntity transactions = new TransactionsEntity();
         transactions.setUserId(userId);
+        transactions.setTxnId(0);
+        transactions.setOrderId(OrderResponse.getOrderId());
         transactions.setStockSymbol(stock);
         transactions.setPrice(amount);
         transactions.setTransactionType(type);

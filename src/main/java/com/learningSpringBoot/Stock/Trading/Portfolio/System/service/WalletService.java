@@ -56,7 +56,7 @@ public class WalletService {
         entity.setBalance(entity.getBalance().add(money.getMoney()));
 
         // create Transaction
-        transactionsService.createTransaction(money.getUid(), null, TransactionType.LOAD_WALLET, money.getMoney(), 0);
+        transactionsService.createTransaction(money.getUid(), "", TransactionType.LOAD_WALLET, money.getMoney(), 0);
 
         return mapToWalletResponse(walletRepository.save(entity));
     }

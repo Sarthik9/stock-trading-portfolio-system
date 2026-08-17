@@ -1,0 +1,31 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: shop-mysql
+    environment:
+      MYSQL_DATABASE: stock_trading
+      MYSQL_USER: stock_trading
+      MYSQL_PASSWORD: stock_trading
+      MYSQL_ROOT_PASSWORD: root123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: stock-app
+
+    depends_on:
+      - mysql
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/stock_trading
+      SPRING_DATASOURCE_USERNAME: stock_trading
+      SPRING_DATASOURCE_PASSWORD: stock_trading
+
+volumes:
+  mysql_data:

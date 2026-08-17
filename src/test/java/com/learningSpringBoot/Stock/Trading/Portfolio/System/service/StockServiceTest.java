@@ -159,7 +159,6 @@ public class StockServiceTest {
         when(stockRepository.save(any())).thenReturn(new StockEntity());
 
         Portfolio portfolio = new Portfolio();
-        portfolio.setOrderId(1);
         portfolio.setStock("Apple");
         portfolio.setQuantity(5);
         portfolio.setAvgPrice(BigDecimal.valueOf(400));
@@ -209,7 +208,6 @@ public class StockServiceTest {
         order.setPrice(BigDecimal.valueOf(500));
 
         Portfolio portfolio = new Portfolio();
-        portfolio.setOrderId(1);
         portfolio.setStock("Apple");
         portfolio.setQuantity(2);
         portfolio.setAvgPrice(BigDecimal.valueOf(400));
