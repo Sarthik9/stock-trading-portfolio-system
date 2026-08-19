@@ -2,22 +2,32 @@ services:
   mysql:
     image: mysql:latest
     container_name: shop-mysql
+
     environment:
       MYSQL_DATABASE: stock_trading
       MYSQL_USER: stock_trading
       MYSQL_PASSWORD: stock_trading
       MYSQL_ROOT_PASSWORD: root123
+
     ports:
       - "3306:3306"
+
     volumes:
       - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "stock_trading", "-pstock_trading"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   app:
     build: .
     container_name: stock-app
 
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
     ports:
       - "8080:8080"
