@@ -1,13 +1,18 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.dto;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.Role;
+import jakarta.validation.constraints.NotNull;
 
-public class User {
+public class RegisterUser {
 
+    @NotNull(message = "username is required")
     private String username;
+
+    @NotNull(message = "email is required")
     private String email;
+
+    @NotNull(message = "password is required")
     private String password;
-    private Role role;
 
     public String getUsername() {
         return username;
@@ -31,13 +36,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 }
