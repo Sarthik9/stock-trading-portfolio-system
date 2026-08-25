@@ -34,4 +34,16 @@ public class GlobalExceptionHandler {
                 .body( new ErrorResponse(msg, 400));
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException ex){
+        return ResponseEntity.status(400)
+                .body( new ErrorResponse(ex.getMessage(), 400));
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex){
+        return ResponseEntity.status(404)
+                .body(new ErrorResponse(ex.getMessage(), 404));
+    }
+
 }

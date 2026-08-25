@@ -1,5 +1,6 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.controller;
 
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.LoginRequest;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.RegisterUser;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.service.UserAuthService;
 import jakarta.validation.Valid;
@@ -22,5 +23,10 @@ public class UserAuthController {
     public ResponseEntity<String> register(@RequestBody @Valid RegisterUser request) {
         userAuthService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest request){
+        return ResponseEntity.ok(userAuthService.login(request));
     }
 }
