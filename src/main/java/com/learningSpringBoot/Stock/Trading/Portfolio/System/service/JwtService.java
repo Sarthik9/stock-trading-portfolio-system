@@ -1,5 +1,6 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
@@ -21,15 +22,36 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long expiration;
 
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
     public String generateToken(String username){
 //        Using the following code once to generate a new secret key for HS256 algorithm
 //        SecretKey key = Jwts.SIG.HS256.key().build();
 //        System.out.println(Encoders.BASE64.encode(key.getEncoded()));
         return Jwts.builder()
-                .setSubject(username)
+                .subject(username)
                 .issuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSigningKey())
                 .compact();
+    }
+
+    public String validateToken(String token) {
+
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+            return claims.getSubject();
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
