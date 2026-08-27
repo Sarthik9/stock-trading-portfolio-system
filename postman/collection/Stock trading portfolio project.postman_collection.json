@@ -98,7 +98,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/orders/e81f65b1-b7a1-43b9-b968-10dce8af2c3c",
+              "raw": "http://localhost:8080/orders/e81f65b1-b7a1-43b9-b968-10dce8af2c2d",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -106,7 +106,7 @@
               "port": "8080",
               "path": [
                 "orders",
-                "e81f65b1-b7a1-43b9-b968-10dce8af2c3c"
+                "e81f65b1-b7a1-43b9-b968-10dce8af2c2d"
               ]
             }
           },
@@ -123,7 +123,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/wallet/getBalance/2c8a46fd-584d-4177-92e3-6b275219e1d2",
+              "raw": "http://localhost:8080/wallet/getBalance/e81f65b1-b7a1-43b9-b968-10dce8af2c2d",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -132,7 +132,7 @@
               "path": [
                 "wallet",
                 "getBalance",
-                "2c8a46fd-584d-4177-92e3-6b275219e1d2"
+                "e81f65b1-b7a1-43b9-b968-10dce8af2c2d"
               ]
             }
           },
@@ -162,6 +162,37 @@
               "path": [
                 "wallet",
                 "addMoney"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Wallet",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/wallet/deleteWallet/5e8f81b8-9702-4ff5-a691-3f103a54f29a",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "wallet",
+                "deleteWallet",
+                "5e8f81b8-9702-4ff5-a691-3f103a54f29a"
               ]
             }
           },
@@ -224,6 +255,72 @@
                   "key": "userId",
                   "value": "e81f65b1-b7a1-43b9-b968-10dce8af2c2d"
                 }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Register",
+      "item": [
+        {
+          "name": "Register",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {}
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\" : \"Samar\",\r\n    \"email\" : \"Samar@gmail.com\",\r\n    \"password\": \"qwerty\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/registerUser",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "registerUser"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\" : \"Sangha\",\r\n    \"password\": \"qwerty\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
               ]
             }
           },

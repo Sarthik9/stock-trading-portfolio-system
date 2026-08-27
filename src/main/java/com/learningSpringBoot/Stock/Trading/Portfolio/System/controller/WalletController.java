@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,5 +30,13 @@ public class WalletController {
     public ResponseEntity<WalletResponse> addMoney(@RequestBody @Valid Money money){
         WalletResponse response = walletService.addMoney(money);
         return ResponseEntity.created(null).body(response);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/deleteWallet/{userId}")
+    public ResponseEntity<String> deleteWallet(@PathVariable @NotNull UUID userId){
+
+        walletService.deleteWallet(userId);
+        return ResponseEntity.ok("Wallet deleted successfully");
     }
 }

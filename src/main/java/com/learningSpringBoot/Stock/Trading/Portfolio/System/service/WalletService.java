@@ -8,6 +8,7 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.WalletNot
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.WalletRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,5 +83,11 @@ public class WalletService {
                 .orElseThrow(() -> new WalletNotFoundException(WALLET_NOT_FOUND + userId));
         entity.setBalance(entity.getBalance().add(amount));
         walletRepository.save(entity);
+    }
+
+    public void deleteWallet(@NotNull UUID userId) {
+        WalletEntity entity = walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new WalletNotFoundException(WALLET_NOT_FOUND + userId));
+        walletRepository.delete(entity);
     }
 }

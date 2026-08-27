@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -32,6 +33,7 @@ public class StockController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/fetchOrders")
     public ResponseEntity<List<StockResponse>> fetchAllOrders(){
 

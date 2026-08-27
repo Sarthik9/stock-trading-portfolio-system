@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class UserAuthService {
@@ -49,7 +50,8 @@ public class UserAuthService {
         boolean exists = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (exists){
             String token = jwtService.generateToken(request.getUsername());
-            return "token : " + token;
+            UUID userId = user.getUserId();
+            return "{ userId : " + userId + ", token : " + token + "}";
         }
         else throw new UserNotFoundException("Invalid password");
     }
