@@ -51,7 +51,7 @@ public class UserAuthService {
         if (exists){
             String token = jwtService.generateToken(request.getUsername());
             UUID userId = user.getUserId();
-            return "{ userId : " + userId + ", token : " + token + "}";
+            return "{ userId : " + userId + ", token : " + token + " }";
         }
         else throw new UserNotFoundException("Invalid password");
     }
