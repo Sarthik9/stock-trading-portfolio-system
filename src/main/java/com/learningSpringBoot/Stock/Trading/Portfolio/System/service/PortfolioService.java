@@ -9,6 +9,7 @@ import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.Portfoli
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,9 +24,11 @@ public class PortfolioService {
     @Autowired
     private PortfolioRepository portfolioRepository;
 
+    @Cacheable(value = "portfolioCache", key = "#userId")
     public List<Portfolio> getPortfolioByUserId(UUID userId) {
         List<PortfolioEntity> entity = portfolioRepository.findAllByUid(userId);
 
+        System.out.println("In PortfolioService DB HIT");
         return mapToPortfolio(entity);
     }
 
