@@ -1,6 +1,9 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.config;
 
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.CacheConfigHandler;
+import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -11,7 +14,7 @@ import java.time.Duration;
 
 @Configuration
 @EnableCaching
-public class RedisConfig {
+public class RedisConfig implements CachingConfigurer {
 
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration() {
@@ -23,5 +26,10 @@ public class RedisConfig {
                         )
                 )
                 .entryTtl(Duration.ofMinutes(10)); // Set the cache expiration time to 10 minutes
+    }
+
+    @Override
+    public CacheErrorHandler errorHandler() {
+        return new CacheConfigHandler();
     }
 }
