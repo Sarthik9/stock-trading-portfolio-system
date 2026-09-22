@@ -1,6 +1,7 @@
 package com.learningSpringBoot.Stock.Trading.Portfolio.System.config;
 
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.security.JwtAuthenticationFilter;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.security.RateLimitFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            RateLimitFilter rateLimitFilter) throws Exception {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -41,6 +43,7 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(rateLimitFilter, JwtAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         // Not authenticated → 401
                         .authenticationEntryPoint(
