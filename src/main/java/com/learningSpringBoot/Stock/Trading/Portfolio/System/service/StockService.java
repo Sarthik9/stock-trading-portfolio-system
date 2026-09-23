@@ -3,6 +3,7 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.service;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.*;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.entity.StockEntity;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.InsufficiencyException;
+import com.learningSpringBoot.Stock.Trading.Portfolio.System.exception.ServiceUnavailableException;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.OrderType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.model.TransactionType;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.repository.StockRepository;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,6 +32,9 @@ public class StockService {
 
     @Autowired
     private TransactionsService transactionsService;
+
+    @Autowired
+    private IdempotencyService idempotencyService;
 
     private static final Logger logger = LoggerFactory.getLogger(StockService.class);
 
@@ -57,8 +62,16 @@ public class StockService {
 
     //Orders are historical records
     @Transactional
-    public OrderResponse createNewOrder(Order order) {
+    public OrderResponse createNewOrder(Order order, String idempotencyKey){
 
+        try{
+        // 1. check idempotency
+        OrderResponse existingResponse = idempotencyService.getExistingResponse(order.getuid(), idempotencyKey);
+        if (existingResponse != null) {
+            return existingResponse;
+        }
+
+        // 2. Buy/Sell logic
         // OrderType - BUY
         if(order.getOrderType().equals(OrderType.BUY)) {
 
@@ -110,7 +123,21 @@ public class StockService {
         }
 
         StockEntity orderEntity = convertToOrderEntity(order);
-        return convertToOrderResponse(stockRepository.save(orderEntity));
+
+        // 3. save result
+        OrderResponse response = convertToOrderResponse(stockRepository.save(orderEntity));
+
+        // 4. store result in redis
+        idempotencyService.saveResponse(
+                order.getuid(),
+                idempotencyKey,
+                response
+        );
+
+        return response;
+    } catch (RedisConnectionFailureException e){
+            throw new ServiceUnavailableException("Order service temporarily unavailable");
+        }
     }
 
     private StockEntity convertToOrderEntity(Order order) {

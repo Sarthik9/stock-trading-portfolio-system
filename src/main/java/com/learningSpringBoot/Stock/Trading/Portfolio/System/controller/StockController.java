@@ -42,11 +42,11 @@ public class StockController {
     }
 
     @PostMapping("/createOrder")
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid Order order){
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid Order order,
+                                                     @RequestHeader("idempotency-key") String idempotencyKey){
 
-        OrderResponse response = stockService.createNewOrder(order);
+        OrderResponse response = stockService.createNewOrder(order, idempotencyKey);
         URI location = URI.create("/orders/" + response.getOrderId());
         return ResponseEntity.created(location).body(response);
     }
 }
-

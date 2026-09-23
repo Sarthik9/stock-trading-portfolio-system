@@ -46,4 +46,10 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ex.getMessage(), 404));
     }
 
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<ErrorResponse> handleServiceUnavailableException(ServiceUnavailableException ex){
+        return  ResponseEntity.status(503)
+                .body( new ErrorResponse(ex.getMessage(), 503));
+    }
+
 }
