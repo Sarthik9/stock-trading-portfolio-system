@@ -15,4 +15,9 @@ public interface StockRepository extends JpaRepository<StockEntity, UUID> {
 
     Optional<StockEntity> findByUidAndStock(UUID uid, String stock);
 
+    Optional<StockEntity> findByUidAndIdempotencyKey(
+            UUID uid,
+            String idempotencyKey
+    );
+
 }

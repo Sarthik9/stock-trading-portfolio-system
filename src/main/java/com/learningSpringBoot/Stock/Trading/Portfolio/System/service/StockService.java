@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StockService {
@@ -62,85 +63,105 @@ public class StockService {
 
     //Orders are historical records
     @Transactional
-    public OrderResponse createNewOrder(Order order, String idempotencyKey){
+    public OrderResponse createNewOrder(Order order, String idempotencyKey) {
 
-        try{
-        // 1. check idempotency
-        OrderResponse existingResponse = idempotencyService.getExistingResponse(order.getuid(), idempotencyKey);
-        if (existingResponse != null) {
-            return existingResponse;
+        try {
+            // 1. check idempotency
+            OrderResponse existingResponse = idempotencyService.getExistingResponse(order.getuid(), idempotencyKey);
+            if (existingResponse != null) {
+                return existingResponse;
+            }
+        } catch (RedisConnectionFailureException e) {
+                logger.warn(
+                        "Redis unavailable. Continuing with database idempotency."
+                );
+            }
+
+        // 2. database idempotency check
+        Optional<StockEntity> existingOrder =
+                stockRepository.findByUidAndIdempotencyKey(
+                        order.getuid(),
+                        idempotencyKey
+                );
+
+        if (existingOrder.isPresent()) {
+            return convertToOrderResponse(existingOrder.get());
         }
 
-        // 2. Buy/Sell logic
-        // OrderType - BUY
-        if(order.getOrderType().equals(OrderType.BUY)) {
+            // 2. Buy/Sell logic
+            // OrderType - BUY
+            if (order.getOrderType().equals(OrderType.BUY)) {
 
-            // check if user has balance or not
-            WalletResponse currentBalance = walletService.getWalletBalance(order.getuid());
+                // check if user has balance or not
+                WalletResponse currentBalance = walletService.getWalletBalance(order.getuid());
 
-            BigDecimal calculatedOrderPrice = order.getPrice().multiply(BigDecimal.valueOf(order.getQuantity()));
+                BigDecimal calculatedOrderPrice = order.getPrice().multiply(BigDecimal.valueOf(order.getQuantity()));
 
-            // balance > orderPrice
-        if(currentBalance.getBalance().compareTo(calculatedOrderPrice) > 0){
+                // balance > orderPrice
+                if (currentBalance.getBalance().compareTo(calculatedOrderPrice) > 0) {
 
-            // Debit wallet
-            walletService.debit(order.getuid(), calculatedOrderPrice);
+                    // Debit wallet
+                    walletService.debit(order.getuid(), calculatedOrderPrice);
 
-            // Update Portfolio
-            portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(),
-                    order.getPrice(), calculatedOrderPrice);
+                    // Update Portfolio
+                    portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(),
+                            order.getPrice(), calculatedOrderPrice);
 
-            // Create transaction
-            transactionsService.createTransaction(order.getuid(), order.getStock(), TransactionType.BUY, calculatedOrderPrice,
-                    order.getQuantity());
+                    // Create transaction
+                    transactionsService.createTransaction(order.getuid(), order.getStock(), TransactionType.BUY, calculatedOrderPrice,
+                            order.getQuantity());
 
+                } else throw new InsufficiencyException("Not Enough Balance");
+
+            } else {
+
+                // Ordertype - SELL
+                Portfolio stockHoldings = portfolioService.getPortfolioByUserIdAndStock(order.getuid(), order.getStock());
+                int quantityOfStocks = stockHoldings.getQuantity();
+                int quantityOfStocksToSell = order.getQuantity();
+
+                if (quantityOfStocksToSell > quantityOfStocks)
+                    throw new InsufficiencyException("Not enough stocks to sell !");
+
+                // Update Portfolio
+                portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(), new BigDecimal("0"), new BigDecimal("0"));
+                logger.info("Sold successfully - stocks : " + order.getStock() + " , quantity : " + order.getQuantity());
+
+                // Credit Wallet
+                walletService.credit(order.getuid(), stockHoldings.getAvgPrice().multiply(BigDecimal.valueOf(quantityOfStocksToSell)));
+
+                // Create transaction
+                transactionsService.createTransaction(order.getuid(), order.getStock(), TransactionType.SELL,
+                        stockHoldings.getAvgPrice().multiply(BigDecimal.valueOf(quantityOfStocksToSell)), order.getQuantity());
+            }
+
+            StockEntity orderEntity = convertToOrderEntity(order, idempotencyKey);
+
+            // 3. save result
+            OrderResponse response = convertToOrderResponse(stockRepository.save(orderEntity));
+
+        // 4. Try to cache response in Redis
+        try {
+
+            idempotencyService.saveResponse(
+                    order.getuid(),
+                    idempotencyKey,
+                    response
+            );
+
+        } catch (RedisConnectionFailureException e) {
+
+            logger.warn(
+                    "Redis unavailable while saving idempotency response. " +
+                            "Order was created successfully."
+            );
         }
 
-        else throw new InsufficiencyException("Not Enough Balance");
-
-        }
-
-        else {
-
-            // Ordertype - SELL
-            Portfolio stockHoldings = portfolioService.getPortfolioByUserIdAndStock(order.getuid(), order.getStock());
-            int quantityOfStocks = stockHoldings.getQuantity();
-            int quantityOfStocksToSell = order.getQuantity();
-
-            if (quantityOfStocksToSell > quantityOfStocks)
-                throw new InsufficiencyException("Not enough stocks to sell !");
-
-            // Update Portfolio
-            portfolioService.updatePortfolio(order.getuid(), order.getStock(), order.getOrderType(), order.getQuantity(), new BigDecimal("0"), new BigDecimal("0"));
-            logger.info("Sold successfully - stocks : " + order.getStock() + " , quantity : " + order.getQuantity());
-
-            // Credit Wallet
-            walletService.credit(order.getuid(), stockHoldings.getAvgPrice().multiply(BigDecimal.valueOf(quantityOfStocksToSell)));
-
-            // Create transaction
-            transactionsService.createTransaction(order.getuid(), order.getStock(), TransactionType.SELL,
-                    stockHoldings.getAvgPrice().multiply(BigDecimal.valueOf(quantityOfStocksToSell)), order.getQuantity());
-        }
-
-        StockEntity orderEntity = convertToOrderEntity(order);
-
-        // 3. save result
-        OrderResponse response = convertToOrderResponse(stockRepository.save(orderEntity));
-
-        // 4. store result in redis
-        idempotencyService.saveResponse(
-                order.getuid(),
-                idempotencyKey,
-                response
-        );
-
-        return response;
-    } catch (RedisConnectionFailureException e){
-            throw new ServiceUnavailableException("Order service temporarily unavailable");
-        }
+            return response;
     }
 
-    private StockEntity convertToOrderEntity(Order order) {
+
+    private StockEntity convertToOrderEntity(Order order, String idempotencyKey) {
 
         StockEntity entity = new StockEntity();
             // New user and order
@@ -149,6 +170,7 @@ public class StockService {
             entity.setOrderType(order.getOrderType());
             entity.setQuantity(order.getQuantity());
             entity.setPrice(order.getPrice());
+            entity.setIdempotencyKey(idempotencyKey);
 
         return entity;
     }

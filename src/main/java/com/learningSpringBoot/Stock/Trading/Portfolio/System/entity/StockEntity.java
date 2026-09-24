@@ -7,7 +7,11 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "stock_orders", indexes = @Index(name = "idx_stock_orders_uid", columnList = "uid"))
+@Table( name = "stock_orders",
+        indexes = @Index(name = "idx_stock_orders_uid", columnList = "uid"),
+        uniqueConstraints = @UniqueConstraint(name= "uk_user_idempotency",
+                columnNames = {"uid", "idempotency_key"}))
+
 public class StockEntity {
 
     @Id
@@ -15,6 +19,9 @@ public class StockEntity {
     private long orderId;
     private String stock;
     private UUID uid;
+
+    @Column(name = "idempotency_key", nullable = false, length = 10)
+    private String idempotencyKey;
 
     @Column(precision = 15, scale = 2)
     private BigDecimal price;
@@ -37,6 +44,14 @@ public class StockEntity {
 
     public void setuid(UUID uid) {
         this.uid = uid;
+    }
+
+    public String getIdempotencyKey() {
+        return idempotencyKey;
+    }
+
+    public void setIdempotencyKey(String idempotencyKey) {
+        this.idempotencyKey = idempotencyKey;
     }
 
     public long getOrderId() {
