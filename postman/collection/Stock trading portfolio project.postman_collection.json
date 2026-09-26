@@ -52,24 +52,34 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Successful POST request\", function () {",
-                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-                  "});",
-                  ""
-                ],
                 "type": "text/javascript",
-                "packages": {},
-                "requests": {}
+                "exec": [
+                  "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+                ]
               }
             }
           ],
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "idempotency-key",
+                "value": "order-003"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"uId\" : \"e81f65b1-b7a1-43b9-b968-10dce8af2c3c\",\n    \"stock\" : \"AirBnb\",\n    \"price\" : 500,\n    \"quantity\": 3,\n    \"orderType\": \"BUY\"\n}",
+              "raw": "{\n    \"uId\" : \"5e8f81b8-9702-4ff5-a691-3f103a54f29a\",\n    \"stock\" : \"HDFCLIFE\",\n    \"price\" : 100,\n    \"quantity\": 2,\n    \"orderType\": \"BUY\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -206,10 +216,20 @@
         {
           "name": "getPortfolio",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8080/portfolio/getPortfolio?userId=e81f65b1-b7a1-43b9-b968-10dce8af2c3c",
+              "raw": "http://localhost:8080/portfolio/getPortfolio?userId=5e8f81b8-9702-4ff5-a691-3f103a54f29a",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -222,7 +242,7 @@
               "query": [
                 {
                   "key": "userId",
-                  "value": "e81f65b1-b7a1-43b9-b968-10dce8af2c3c"
+                  "value": "5e8f81b8-9702-4ff5-a691-3f103a54f29a"
                 }
               ]
             }
@@ -304,7 +324,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\" : \"Sangha\",\r\n    \"password\": \"qwerty\"\r\n}",
+              "raw": "{\r\n    \"username\" : \"Sarthik\",\r\n    \"password\": \"@dmin\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"

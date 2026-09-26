@@ -3,6 +3,9 @@ package com.learningSpringBoot.Stock.Trading.Portfolio.System.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learningSpringBoot.Stock.Trading.Portfolio.System.dto.OrderResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +29,13 @@ public class IdempotencyService {
     public OrderResponse getExistingResponse(UUID userId, String idempotencyKey) {
 
         String key = buildKey(userId, idempotencyKey);
-
+        try {
         String cachedResponse = stringRedisTemplate.opsForValue().get(key);
         if (cachedResponse == null) {
             return null;
         }
 
-        try{
-            return objectMapper.readValue(
+        return objectMapper.readValue(
                     cachedResponse,
                     OrderResponse.class);
         } catch(JsonProcessingException e){

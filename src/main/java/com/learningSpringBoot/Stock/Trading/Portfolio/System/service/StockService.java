@@ -66,9 +66,10 @@ public class StockService {
     public OrderResponse createNewOrder(Order order, String idempotencyKey) {
 
         try {
-            // 1. check idempotency
+            // 1. check redis idempotency
             OrderResponse existingResponse = idempotencyService.getExistingResponse(order.getuid(), idempotencyKey);
             if (existingResponse != null) {
+                logger.info("Returning already existing order from Redis for userId: " + order.getuid() + " and idempotencyKey: " + idempotencyKey);
                 return existingResponse;
             }
         } catch (RedisConnectionFailureException e) {
@@ -85,6 +86,7 @@ public class StockService {
                 );
 
         if (existingOrder.isPresent()) {
+            logger.info("Returning already existing order in database for userId: " + order.getuid() + " and idempotencyKey: " + idempotencyKey);
             return convertToOrderResponse(existingOrder.get());
         }
 
